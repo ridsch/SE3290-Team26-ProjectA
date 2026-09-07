@@ -1,6 +1,6 @@
 <h1>Chalo Ghume</h1>
 
-<p>This project is a clone of the Expedia website, created by Team of 5 starting with Kumkum (Team Lead), Ashish, Amit, Sagar Balsaraf, and Sarim . The purpose of this project is to showcase our skills and knowledge in HTML, CSS, JavaScript, React, Redux, and Json-Server.<p>
+<p>This project is a clone of the Expedia website, created originally by Team of 5 starting with Kumkum (Team Lead), Ashish, Amit, Sagar Balsaraf, and Sarim . The purpose of this project is to showcase our skills and knowledge in HTML, CSS, JavaScript, React, Redux, and Json-Server. It has been adapted by a Team of 2, Schuyler Ridenour and Mia Vogel<p>
 
 
 <h2>Tech Stack</h2>
