@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import "./PriceSlider.css";
-import StayData from "./StayData";
 
-const PriceSlider = () => {
- const [sliderValues, setSliderValues] = useState({ min: 130, max: 250 });
+const PriceSlider = ({ onPriceChange }) => {
+  const [sliderValues, setSliderValues] = useState({ min: 500, max: 20000 });
 
   const handleSliderChange = (event) => {
     const { name, value } = event.target;
-    setSliderValues({ ...sliderValues, [name]: parseInt(value, 10) });
+    const newValues = { ...sliderValues, [name]: parseInt(value, 10) || 0 };
+    setSliderValues(newValues);
+
+    if (onPriceChange) {
+      onPriceChange(newValues.min, newValues.max);
+    }
   };
 
   const formatSliderValue = (value) => `₹${value.toLocaleString()}`;
 
-  
   return (
     <div className="price-range-slider">
       <div
@@ -23,8 +26,9 @@ const PriceSlider = () => {
           <p>Minimum Price</p>
           <input
             type="range"
-            min={130}
-            max={500}
+            min={100}
+            max={10000}
+            step={200}
             name="min"
             value={sliderValues.min}
             onChange={handleSliderChange}
@@ -39,7 +43,8 @@ const PriceSlider = () => {
           <input
             type="range"
             min={sliderValues.min}
-            max={10000}
+            max={30000}
+            step={500}
             name="max"
             value={sliderValues.max}
             onChange={handleSliderChange}
@@ -57,8 +62,9 @@ const PriceSlider = () => {
             sliderValues.max
           )}`}
           style={{
-            backgroundColor: `rgb(240, 230, ${Math.round(
-              (sliderValues.max / 500) * 255
+            backgroundColor: `rgb(240, 230, ${Math.min(
+              255,
+              Math.round((sliderValues.max / 30000) * 255)
             )})`,
             width: "50%",
           }}

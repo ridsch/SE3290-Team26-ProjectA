@@ -48,7 +48,7 @@ export const addHotel = (payload) => (dispatch) => {
   dispatch(hotelRequest());
 
   axios
-    .post("https://happy-sunglasses-eel.cyclic.app/hotel", payload) 
+    .post("http://localhost:8080/hotel", payload) 
     .then(() => {
       dispatch(postHotelSuccess());
     })
@@ -57,32 +57,44 @@ export const addHotel = (payload) => (dispatch) => {
     });
 };
 
-//https://happy-sunglasses-eel.cyclic.app/hotel?_sort=asc&_order=price&page=1&_limit=20
-export const fetchingHotels = (sort, order, page) => async (dispatch) => {
-  console.log(order, sort,page);
+//http://localhost:8080/hotel?_sort=asc&_order=price&page=1&_limit=20
+export const fetchingHotels = (param1, param2, page) => async (dispatch) => {
+  const field = (param1 === "price" || param1 === "rating") ? param1 : ((param2 === "price" || param2 === "rating") ? param2 : "");
+  const direction = (param1 === "asc" || param1 === "desc") ? param1 : ((param2 === "asc" || param2 === "desc") ? param2 : "");
+
   dispatch({ type: HOTEL_REQUEST });
+
   try {
-    const res = await axios.get(
-      `https://happy-sunglasses-eel.cyclic.app/hotel?_sort=${sort}&_order=${order}&_page=${page}&_limit=20`
-    );
-    console.log(res.data);
-    dispatch({ type: GET_HOTEL_SUCCESS, payload: res.data });
+    let url = `http://localhost:8080/hotel`;
+    const params = [];
+
+    if (page) params.push(`_page=${page}`);
+
+    if (field) {
+      const sortParam = direction === "desc" ? `-${field}` : field;
+      params.push(`_sort=${sortParam}`);
+    }
+
+    if (params.length > 0) {
+      url += `?${params.join("&")}`;
+    }
+
+    console.log("Fetching URL:", url);
+    const res = await axios.get(url);
+    const hotelArray = Array.isArray(res.data) ? res.data : (res.data?.data || []);
+    console.log("Fetched hotels:", hotelArray.length);
+    dispatch({ type: GET_HOTEL_SUCCESS, payload: hotelArray });
   } catch (err) {
     dispatch({ type: HOTEL_FAILURE });
     console.log(err);
   }
 };
-
-
-
-
-
 //
 
 export const DeleteHotel = (deleteId) => async (dispatch) => {
   try {
     const res = await fetch(
-      `https://happy-sunglasses-eel.cyclic.app/hotel/${deleteId}`, 
+      `http://localhost:8080/hotel/${deleteId}`, 
       {
         method: "DELETE",
         headers: {
